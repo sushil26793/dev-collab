@@ -1,0 +1,19 @@
+# Node.js dependencies for both client and server
+**/node_modules/
+
+# Logs
+logs
+*.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Build output
+client/build/
+server/dist/
+server/build/
+
+# Misc
+.DS_Store
