@@ -1,0 +1,5 @@
+[build]
+  # This tells Netlify to run "npm install --force" instead of the default command.
+  install_command = "npm install --force"
+  command = "npm run build"
+  publish = ".next"
