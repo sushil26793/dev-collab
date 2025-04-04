@@ -9,7 +9,9 @@ import { Badge } from '@/components/ui/badge'
 import { Team } from '@/types/team'
 
 
-export default function TeamCard({ team, setSelectedTeam }: { team: Team, setSelectedTeam: any }) {
+export default function TeamCard({ team, setSelectedTeam }: { 
+    team: Team, 
+    setSelectedTeam: React.Dispatch<React.SetStateAction<Team| null>> }) {
     return (
 
         <Card key={team.id} className="hover:shadow-lg transition-shadow">

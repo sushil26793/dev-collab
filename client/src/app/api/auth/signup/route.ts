@@ -32,6 +32,7 @@ export async function POST(request: Request) {
         const data = response.data.data.signupWithEmail;
         return NextResponse.json({ success: true, message: 'Signup successful', data });
     } catch (error) {
+        console.error(error)
         return NextResponse.json({ success: false, error: 'An error occurred while processing your request.' });
     }
 

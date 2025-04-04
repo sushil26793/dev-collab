@@ -67,8 +67,10 @@ export function ChatProvider({ children }: ChatProviderProps) {
   const [notifications, setNotifications] = useState<Notification[]>([])
   useEffect(() => {
     const socket = initializeSocket();
-    if (!socket) return;
-    const { user } = getUserFromCookies()
+    const authnticatedUser = getUserFromCookies()
+    const user = authnticatedUser?.user;
+    if (!socket || !user) return;
+
     socket.emit("join", user.id.toString())
 
     socket.emit('request_history');
@@ -140,19 +142,19 @@ export function ChatProvider({ children }: ChatProviderProps) {
 
 
   const loadNotifications = async (userId: string) => {
-
+    console.log(userId)
   }
 
 
 
   return (
     <ChatContext.Provider
-      value={{ 
-        messages, onlineCount, 
-        typingUsers, sendMessage, 
-        editMessage, sendFile, 
-        sendInvite, notifications, 
-        setNotifications, loadNotifications 
+      value={{
+        messages, onlineCount,
+        typingUsers, sendMessage,
+        editMessage, sendFile,
+        sendInvite, notifications,
+        setNotifications, loadNotifications
       }}
     >
       {children}

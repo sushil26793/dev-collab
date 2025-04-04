@@ -3,10 +3,10 @@ import { useEffect, useState, useCallback } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Settings, Search, UserPlus, X, Users } from "lucide-react"
+import { Plus, Search, UserPlus, X, Users } from "lucide-react"
 import { useApi } from '@/app/hooks/api'
 import { debounce } from '@/lib/utils'
 import {
@@ -28,9 +28,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import TeamCard from '@/app/components/team/team-card';
-import { Team, Member } from '@/types/team';
+import { Team } from '@/types/team';
 import { useChat } from '@/app/context/chat-provider'
 import { getUserFromCookies } from '@/app/utils';
+import { User } from '@/types/user'
 export default function TeamPage() {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null)
@@ -45,15 +46,21 @@ export default function TeamPage() {
   const { data: teams, loading: teamsLoading, callApi: callGetTeams } = useApi<Team[]>({ route: '/api/team', method: 'GET' })
   const { callApi: callCreateTeam } = useApi({ route: '/api/team', method: 'POST', data: teamInput })
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const { data: apiSearchResults, loading: searchResultsLoading, callApi: callSearchUsers } = useApi<any []>({ route: `/api/user/${debouncedSearchTerm}`, method: 'GET' })
+  const { data: apiSearchResults, loading: searchResultsLoading, callApi: callSearchUsers } = useApi<User[]>({ route: `/api/user/${debouncedSearchTerm}`, method: 'GET' })
   const { sendInvite } = useChat();
-  const { user={} } = getUserFromCookies()||{}
+  const authnticatedUser = getUserFromCookies();
+  const user = authnticatedUser?.user;
+
+
   const debouncedSearch = useCallback(
     debounce((query: string) => {
-      setDebouncedSearchTerm(query)
+      setDebouncedSearchTerm(query);
     }, 400),
-    [searchInput]
-  )
+    []
+  );
+
+
+
 
   useEffect(() => {
     callGetTeams()
@@ -67,8 +74,12 @@ export default function TeamPage() {
     if (debouncedSearchTerm) {
       callSearchUsers()
     }
-  }, [debouncedSearchTerm])
+  }, [debouncedSearchTerm, callSearchUsers])
 
+
+  if (!user) {
+    return <div>Loading...</div>; // or a proper loading state
+  }
   const handleCreateTeam = async () => {
     await callCreateTeam()
     setShowCreateModal(false)
@@ -110,6 +121,8 @@ export default function TeamPage() {
     // Add your API call here
     callGetTeams() // Refresh team data
   }
+
+
 
   if (teamsLoading) {
     return (
@@ -281,7 +294,7 @@ export default function TeamPage() {
                       </div>
                     ) : (
                       <div className="text-center text-muted-foreground py-4">
-                        No users found matching "{searchInput}"
+                        No users found matching {searchInput}
                       </div>
                     )}
                   </div>
@@ -298,7 +311,7 @@ export default function TeamPage() {
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    {selectedTeam.members.map((member,index) => (
+                    {selectedTeam.members.map((member, index) => (
                       <div
                         key={index}
                         className="flex items-center justify-between p-3 bg-background rounded-lg"

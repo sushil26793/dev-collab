@@ -1,3 +1,5 @@
+import { AuthenticatedUser, User } from "@/types/user";
+
 export const checkUserInSessionStorage = (): boolean => {
   try {
     const cookies = document.cookie.split('; ').reduce((acc, cookie) => {
@@ -13,7 +15,7 @@ export const checkUserInSessionStorage = (): boolean => {
 };
 
 
-export const getUserFromCookies = (): any | null => {
+export const getUserFromCookies = (): AuthenticatedUser | null => {
   if(typeof window === 'undefined') return null;
   const cookieObj = document.cookie.split('; ').reduce((acc, cookie) => {
     const [key, ...v] = cookie.split('=');
@@ -23,10 +25,11 @@ export const getUserFromCookies = (): any | null => {
   if(cookieObj['user']) {
     return JSON.parse(cookieObj['user']);
   }
+
   return null;
 
 }
 
-export const setUserInCookies = (user: any) => {
+export const setUserInCookies = (user: User) => {
   document.cookie = JSON.stringify(user);
 }

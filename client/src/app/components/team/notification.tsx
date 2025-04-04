@@ -8,7 +8,7 @@ import { NotificationType } from "@/types/team";
 import { useApi } from "@/app/hooks/api";
 export default function Notification() {
 
-    const { notifications, setNotifications } = useChat()
+    const { notifications } = useChat()
     const { callApi } = useApi({
         route: '/api/team/invitation',
         method: 'POST',

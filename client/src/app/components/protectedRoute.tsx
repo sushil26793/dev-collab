@@ -1,15 +1,15 @@
-"use client";
-import { useEffect, useState } from 'react'; // Import useState is crucial
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { checkUserInSessionStorage } from '../utils';
 
-export const protectedRoute = (WrappedComponent: any) => {
-  return function WithAuth(props: any) {
+export function protectedRoute<P extends object>(
+  WrappedComponent: React.ComponentType<P>
+) {
+  const WithAuth = (props: P) => {
     const router = useRouter();
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null); 
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
     useEffect(() => {
-
       const session = checkUserInSessionStorage();
       setIsAuthenticated(session);
       if (!session) {
@@ -18,13 +18,20 @@ export const protectedRoute = (WrappedComponent: any) => {
     }, [router]);
 
     if (isAuthenticated === null) {
-      return null;
+      return null; // Or a loading spinner, etc.
     }
 
     if (!isAuthenticated) {
-      return null;
+      return null; // Or a redirect component, etc.
     }
 
     return <WrappedComponent {...props} />;
   };
-};
+
+  // Assign a display name for debugging purposes
+  const wrappedComponentName =
+    WrappedComponent.displayName || WrappedComponent.name || 'Component';
+  WithAuth.displayName = `protectedRoute(${wrappedComponentName})`;
+
+  return WithAuth;
+}

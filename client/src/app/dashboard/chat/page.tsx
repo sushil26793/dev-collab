@@ -24,7 +24,6 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useChat, } from '@/app/context/chat-provider'
-import { protectedRoute } from '@/app/components/protectedRoute'
 import { getSocket } from '@/lib/socket'
 import { getUserFromCookies } from '@/app/utils'
 
@@ -35,7 +34,7 @@ export default function GlobalChatPage() {
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [isTyping, setIsTyping] = useState(false);
 
-    const { messages, onlineCount, typingUsers, sendMessage, editMessage, sendFile } = useChat();
+    const { messages, onlineCount, typingUsers } = useChat();
     const socket = getSocket()
     const user = getUserFromCookies()
 
@@ -47,6 +46,7 @@ export default function GlobalChatPage() {
     ]
 
     const addReaction = (messageId: number, emoji: string) => {
+        console.log(messageId,emoji)
         // Reaction logic
     }
 

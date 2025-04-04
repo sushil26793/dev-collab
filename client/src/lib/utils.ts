@@ -6,10 +6,13 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 
-export function debounce(func: Function, delay: number) {
-  let timeout: NodeJS.Timeout;
-  return function(this: any, ...args: any[]) {
+export function debounce<A extends unknown[]>(
+  func: (...args: A) => void,
+  delay: number
+): (...args: A) => void {
+  let timeout: ReturnType<typeof setTimeout>;
+  return (...args: A): void => {
     clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), delay);
+    timeout = setTimeout(() => func(...args), delay);
   };
 }

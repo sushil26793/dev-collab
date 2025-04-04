@@ -1,8 +1,17 @@
 // src/app/api/auth/callback/github/route.ts
 import { NextResponse } from 'next/server';
 import axios from 'axios';
-import { cookies } from 'next/headers';
 
+interface GitHubEmail {
+    id:string;
+    email: string;
+    primary: boolean;
+    verified: boolean;
+    visibility: string | null;
+    avatar_url: string;
+    login:string
+  }
+  
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const code = searchParams.get('code');
@@ -30,7 +39,7 @@ export async function GET(request: Request) {
         const { access_token } = data;
 
         // Get user data from GitHub
-        const { data: userData } = await axios.get('https://api.github.com/user', {
+        const { data: userData } = await axios.get<GitHubEmail>('https://api.github.com/user', {
             headers: {
                 Authorization: `Bearer ${access_token}`,
             },
@@ -45,7 +54,7 @@ export async function GET(request: Request) {
                 },
             });
             // Pick the primary email (or the first if none is marked primary)
-            const primaryEmail = emails.find((e: any) => e.primary) || emails[0];
+            const primaryEmail = emails.find((e:GitHubEmail) => e.primary) || emails[0];
             email = primaryEmail?.email;
         }
 

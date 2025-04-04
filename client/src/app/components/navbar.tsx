@@ -1,7 +1,6 @@
 "use client"
 import {
   Menu,
-  Bell,
   Settings,
   User,
 } from "lucide-react"

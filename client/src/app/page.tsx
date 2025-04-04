@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect } from "react"
 import { getUserFromCookies } from "./utils"
 import { redirect } from "next/navigation"
 import Link from "next/link"

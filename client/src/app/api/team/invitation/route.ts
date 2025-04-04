@@ -1,11 +1,10 @@
-import { getUserFromCookies } from "@/app/utils"
 import axios from "axios"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
 
 
-export async function GET(req: Request) {
+export async function GET() {
     return NextResponse.json({ success: true })
 }
 
