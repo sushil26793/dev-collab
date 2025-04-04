@@ -20,7 +20,7 @@ import { protectedRoute } from "./protectedRoute"
 import Notification from "./team/notification"
 
 function Navbar() {
-  const { user } = getUserFromCookies();
+  const { user } = getUserFromCookies()||{};
   const { callApi } = useApi({
     route: '/api/auth/logout',
     method: 'POST',

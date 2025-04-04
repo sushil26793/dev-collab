@@ -3,10 +3,12 @@ import axios from 'axios';
 
 export async function GET(
   request: Request,
-  { params }: { params: { search: string } }
+  { params }: { params: Promise<{ search: string }> }
 ) {
   try {
-    const { search } = params; // No "await" here!
+    // Await params to satisfy the type constraint
+    const resolvedParams = await params;
+    const { search } = resolvedParams;
     const response = await axios.post(
       process.env.NEXT_PUBLIC_BASE_API_URL as string,
       {
@@ -35,7 +37,7 @@ export async function GET(
     return NextResponse.json({
       success: false,
       message: 'Search failed',
-      error: errorMessage
+      error: errorMessage,
     });
   }
 }

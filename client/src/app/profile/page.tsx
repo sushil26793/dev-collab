@@ -11,7 +11,8 @@ import { protectedRoute } from "../components/protectedRoute"
 import { getUserFromCookies } from "../utils"
 
 function ProfilePage() {
-  const { user } = getUserFromCookies();
+  const { user } = getUserFromCookies()||{};
+  if(!user) return <div>loading....</div>
   const isGitHubUser = !!user.githubId;
   const createdDate = new Date(user.createdAt).toLocaleDateString('en-US', {
     year: 'numeric',
