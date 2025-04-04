@@ -27,12 +27,15 @@ export async function GET(
       success: true,
       data: response.data.data.searchUsers,
     });
-  } catch (error: any) {
-    console.error(error);
+  } catch (error: unknown) {
+    let errorMessage = 'An unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
     return NextResponse.json({
       success: false,
       message: 'Search failed',
-      error: error.message,
+      error: errorMessage
     });
   }
 }
