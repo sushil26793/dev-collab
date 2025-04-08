@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { checkUserInSessionStorage } from '../utils';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { checkUserInSessionStorage } from "../utils";
+import LoginFallback from "./login-fallback";
+
 
 export function protectedRoute<P extends object>(
   WrappedComponent: React.ComponentType<P>
@@ -12,25 +14,24 @@ export function protectedRoute<P extends object>(
     useEffect(() => {
       const session = checkUserInSessionStorage();
       setIsAuthenticated(session);
-      if (!session) {
-        router.push('/login');
-      }
+      // For Option A (immediate redirect): router.push('/login');
     }, [router]);
 
     if (isAuthenticated === null) {
-      return null; // Or a loading spinner, etc.
+      // You can show a loading spinner or null while determining auth status
+      return null;
     }
 
     if (!isAuthenticated) {
-      return null; // Or a redirect component, etc.
+      // Option B: Render a fallback UI with a nice design
+      return <LoginFallback />;
     }
 
     return <WrappedComponent {...props} />;
   };
 
-  // Assign a display name for debugging purposes
   const wrappedComponentName =
-    WrappedComponent.displayName || WrappedComponent.name || 'Component';
+    WrappedComponent.displayName || WrappedComponent.name || "Component";
   WithAuth.displayName = `protectedRoute(${wrappedComponentName})`;
 
   return WithAuth;

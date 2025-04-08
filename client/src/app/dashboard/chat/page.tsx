@@ -26,9 +26,10 @@ import {
 import { useChat, } from '@/app/context/chat-provider'
 import { getSocket } from '@/lib/socket'
 import { getUserFromCookies } from '@/app/utils'
+import { protectedRoute } from '@/app/components/protectedRoute'
 
 
-export default function GlobalChatPage() {
+ function GlobalChatPage() {
     const [newMessage, setNewMessage] = useState('')
     const [showMentions, setShowMentions] = useState(true)
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -310,3 +311,7 @@ export default function GlobalChatPage() {
         </div>
     )
 }
+
+
+
+export default protectedRoute(GlobalChatPage)

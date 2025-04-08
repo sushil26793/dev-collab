@@ -32,7 +32,10 @@ import { Team } from '@/types/team';
 import { useChat } from '@/app/context/chat-provider'
 import { getUserFromCookies } from '@/app/utils';
 import { User } from '@/types/user'
-export default function TeamPage() {
+import { protectedRoute } from '@/app/components/protectedRoute'
+
+
+ function TeamPage() {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null)
   const [teamInput, setTeamInput] = useState({
@@ -76,10 +79,6 @@ export default function TeamPage() {
     }
   }, [debouncedSearchTerm, callSearchUsers])
 
-
-  if (!user) {
-    return <div>Loading...</div>; // or a proper loading state
-  }
   const handleCreateTeam = async () => {
     await callCreateTeam()
     setShowCreateModal(false)
@@ -102,8 +101,6 @@ export default function TeamPage() {
 
     const result = await sendInvite(propData)
     console.log(result)
-    // Add your API call here to add members
-    return
     setSelectedUsers([])
     setSearchInput('')
     callGetTeams() // Refresh team data
@@ -394,3 +391,6 @@ export default function TeamPage() {
     </div>
   )
 }
+
+
+export default protectedRoute(TeamPage)

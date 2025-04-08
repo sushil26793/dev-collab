@@ -16,7 +16,6 @@ import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
 import { useApi } from "../hooks/api"
 import { getUserFromCookies } from "../utils"
-import { protectedRoute } from "./protectedRoute"
 import Notification from "./team/notification"
 
 function Navbar() {
@@ -117,5 +116,4 @@ function Navbar() {
   )
 }
 
-const protectedNavbar = protectedRoute(Navbar)
-export { protectedNavbar as Navbar }
+export { Navbar }

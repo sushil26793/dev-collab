@@ -11,7 +11,7 @@ export function initializeSocket(): Socket | null {
     return null;
   }
   // Create and store the socket instance
-  socket = io('https://dev-collab-uq02.onrender.com', {
+  socket = io('http://localhost:8080', {
     auth: {
       token: user.token,
       user,
