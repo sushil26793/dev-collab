@@ -90,7 +90,7 @@ import { protectedRoute } from '@/app/components/protectedRoute'
     const propData = {
       recipientIds: selectedUsers,
       type: 'invitation',
-      content: `${user.username} invited you to join team ${selectedTeam.name}`,
+      content: `${user? user.username:"john"} invited you to join team ${selectedTeam.name}`,
       status: "unread",
       metadata: {
         teamId: selectedTeam.id,
