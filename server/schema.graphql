@@ -46,13 +46,12 @@ type MemberType {
 type Mutation {
   acceptInvitation(invitationId: String!, notificationId: String!): TeamType!
   addMember(input: AddMemberInput!): TeamType!
-  createProject(description: String, title: String!): ProjectType!
-  createTask(description: String, projectId: String!, title: String!): TaskType!
+  addMemberToProject(memberId: String!, projectId: String!): ProjectType!
+  createProject(createdBy: String!, description: String, dueDate: String!, name: String!, priority: ProjectPriority!, starred: Boolean = false, team: [String!]): ProjectType!
   createTeam(input: CreateTeamInput!): TeamType!
   loginWithEmail(input: EmailAuthInput!): AuthPayload!
   loginWithGitHub(input: GitHubAuthInput!): AuthPayload!
   signupWithEmail(input: EmailAuthInput!): AuthPayload!
-  updateTaskStatus(status: String!, taskId: String!): TaskType!
 }
 
 type NotificationMetadata {
@@ -61,37 +60,65 @@ type NotificationMetadata {
   teamId: String
 }
 
+"""The priority level of a project."""
+enum ProjectPriority {
+  high
+  low
+  medium
+}
+
+"""The status of a project."""
+enum ProjectStatus {
+  completed
+  inProgress
+  onHold
+  planning
+}
+
+"""The Project model"""
 type ProjectType {
-  createdAt: DateTimeISO!
+  """When the project was created"""
+  createdAt: DateTimeISO
+
+  """The ID of the user who created the project"""
+  createdBy: ID!
+
+  """A description of the project"""
   description: String
+
+  """The due date of the project"""
+  dueDate: DateTimeISO!
   id: ID!
-  members: [UserType!]!
-  owner: UserType!
-  tasks: [TaskType!]!
-  title: String!
-  updatedAt: DateTimeISO!
+
+  """The name of the project"""
+  name: String!
+
+  """The project's priority"""
+  priority: ProjectPriority!
+
+  """The progress percentage of the project"""
+  progress: Float!
+
+  """Whether the project is starred"""
+  starred: Boolean!
+
+  """The current status of the project"""
+  status: ProjectStatus!
+
+  """IDs of team members involved in the project"""
+  team: [String!]!
+
+  """When the project was last updated"""
+  updatedAt: DateTimeISO
 }
 
 type Query {
   getNotifications: [notificationType!]!
   getTeam(id: String!): TeamType!
-  getUserProjects: [ProjectType!]!
+  project(id: String!): ProjectType
+  projects: [ProjectType!]!
   searchUsers(search: String!): [UserType!]!
   teams: [TeamType!]!
-}
-
-enum TaskStatus {
-  DONE
-  IN_PROGRESS
-  TODO
-}
-
-type TaskType {
-  assignedTo: UserType
-  description: String
-  id: ID!
-  status: TaskStatus!
-  title: String!
 }
 
 type TeamType {

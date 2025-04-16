@@ -9,7 +9,6 @@ import 'reflect-metadata'; // Ensure this is imported before buildSchema
 import { connectDB } from './config/db';
 import { AuthResolver } from './resolvers/auth.resolver';
 import { ProjectResolver } from './resolvers/project.resolver';
-import { TaskResolver } from './resolvers/task.resolver';
 import { createServer } from 'http';
 import { Server as socketServer } from 'socket.io';
 import { setupChatSocket } from './sockets/chat.socket';
@@ -28,18 +27,20 @@ async function startServer() {
     await connectDB();
 
     const schema = await buildSchema({
-        resolvers: [AuthResolver, ProjectResolver, TaskResolver,TeamResolver,InvitationResolver,UserResolver,NotificationResolver], // Register class-based resolvers
+        resolvers: [AuthResolver, ProjectResolver,TeamResolver,InvitationResolver,UserResolver,NotificationResolver,ProjectResolver], // Register class-based resolvers
         validate: false, // Optional: Disable automatic validation for inputs
         emitSchemaFile: true, // Helps in debugging schema generation issues
+        
     });
 
 
-    app.use(cors());
+    app.use(cors());    
     app.use(json());
 
     const server = new ApolloServer({
         schema,
-        context: createContext
+        context: createContext,
+        cache:"bounded"
     });
 
     await server.start();
