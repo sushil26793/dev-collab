@@ -59,7 +59,7 @@ import { protectedRoute } from '@/app/components/protectedRoute'
     debounce((query: string) => {
       setDebouncedSearchTerm(query);
     }, 400),
-    []
+    [debounce]
   );
 
 

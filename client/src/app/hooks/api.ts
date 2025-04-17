@@ -4,7 +4,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 interface UseApiOptions<T=unknown> {
-  route: string;
+  route?: string;
   /** The HTTP method to use, e.g. 'GET' */
   method?: HttpMethod;
   /** The body/payload for POST, PUT, PATCH, etc. */
@@ -20,7 +20,7 @@ interface UseApiReturn<T = unknown> {
   loading: boolean;
   error: string | null;
   /** Manually trigger the API call */
-  callApi: (overrideData?: Record<string, unknown>) => Promise<void>;
+  callApi: (overrideData?: Record<string, unknown>,route?:string) => Promise<void>;
 }
 
 
@@ -59,13 +59,13 @@ export function useApi<T = unknown>({
 
   // The core API calling function
   const callApi = useCallback(
-    async (overrideData?: Record<string,unknown>) => {
+    async (overrideData?: Record<string,unknown>,route?:string) => {
       setLoading(true);
       setError(null);
 
       try {
         const response = await axios({
-          url: fullUrl,
+          url: route? route:fullUrl,
           method,
           data: overrideData !== undefined ? overrideData : data,
           ...mergedConfig,
